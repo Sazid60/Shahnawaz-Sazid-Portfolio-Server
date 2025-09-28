@@ -14,12 +14,6 @@ const createUser = async (payload: Prisma.UserCreateInput): Promise<User> => {
 }
 
 
-
-
-
-
-
-
 export const UserService = {
     createUser,
 }
