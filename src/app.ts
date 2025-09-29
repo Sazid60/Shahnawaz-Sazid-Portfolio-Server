@@ -5,13 +5,14 @@ import cors from "cors";
 import { UserRouter } from "./modules/user/user.route";
 import { AuthRouter } from "./modules/auth/auth.route";
 import { BlogRouter } from "./modules/blog/blog.route";
+import { ProjectRouter } from "./modules/project/project.route";
 
 
 const app = express()
 
-app.use(cors()); 
-app.use(compression()); 
-app.use(express.json()); 
+app.use(cors());
+app.use(compression());
+app.use(express.json());
 
 app.use(
   cors({
@@ -21,16 +22,17 @@ app.use(
 );
 
 app.use("/api/v1/user", UserRouter);
-app.use("/api/v1/auth", AuthRouter) 
-app.use("/api/v1/blog", BlogRouter) 
+app.use("/api/v1/auth", AuthRouter)
+app.use("/api/v1/blog", BlogRouter)
+app.use("/api/v1/project", ProjectRouter)
 
 app.get("/", (req: Request, res: Response) => {
-    res.status(200).json({
-        message: "Welcome To The App"
-    })
+  res.status(200).json({
+    message: "Welcome To The App"
+  })
 })
 
-app.use((req: Request, res:Response) => {
+app.use((req: Request, res: Response) => {
   res.status(404).json({
     success: false,
     message: "Route Not Found",
