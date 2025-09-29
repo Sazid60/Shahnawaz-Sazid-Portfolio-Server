@@ -33,6 +33,7 @@ model Blog {
   views     Int      @default(0)
   tags      String[]
   authorId  Int
+  featured  Boolean  @default(false)
   author    User     @relation(fields: [authorId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

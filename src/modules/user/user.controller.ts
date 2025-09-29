@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import { UserService } from "./user.service";
@@ -21,22 +21,44 @@ const createUser = async (req: Request, res: Response) => {
             image: imageUrl,
         });
 
-        res.status(201).json(result);
-    } catch (error) {
+        res.status(201).json({
+            success: true,
+            message: "User created successfully",
+            data: result,
+        });
+    } catch (error: any) {
         console.log(error);
         if (imageUrl) {
             await deleteImageFromCloudinary(imageUrl);
         }
-        res.status(500).send(error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to create user",
+            error: error.message,
+        });
     }
 };
 
 const getMe = async (req: Request, res: Response) => {
     try {
         const result = await UserService.getMe(req.params.email);
-        res.status(200).json(result);
-    } catch (error) {
-        res.status(500).send(error);
+        if (!result) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+        res.status(200).json({
+            success: true,
+            message: "User fetched successfully",
+            data: result,
+        });
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch user",
+            error: error.message,
+        });
     }
 };
 
@@ -46,8 +68,6 @@ const updateUser = async (req: Request, res: Response) => {
     try {
         const id = parseInt(req.params.id);
         const updates = req.body.data ? JSON.parse(req.body.data) : {};
-
-        console.log(updates)
 
         if (updates.password) {
             updates.password = await bcrypt.hash(updates.password, 10);
@@ -60,14 +80,21 @@ const updateUser = async (req: Request, res: Response) => {
 
         const result = await UserService.updateUser(id, updates);
 
-        res.status(200).json(result);
-    } catch (error) {
+        res.status(200).json({
+            success: true,
+            message: "User updated successfully",
+            data: result,
+        });
+    } catch (error: any) {
         console.log(error);
-
         if (newImageUrl) {
             await deleteImageFromCloudinary(newImageUrl);
         }
-        res.status(500).send(error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to update user",
+            error: error.message,
+        });
     }
 };
 
