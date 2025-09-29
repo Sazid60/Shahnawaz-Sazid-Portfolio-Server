@@ -21,9 +21,9 @@ const createUser = async (payload: Prisma.UserCreateInput): Promise<Omit<User, "
 };
 
 
-const getMe = async (email: string): Promise<Omit<User, "password"> | null> => {
+const getMe = async (id: number): Promise<Omit<User, "password"> | null> => {
     return prisma.user.findUnique({
-        where: { email },
+        where: { id },
         select: {
             id: true,
             name: true,

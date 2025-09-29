@@ -90,12 +90,23 @@ const updateProject = async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
         const updates = req.body.data ? JSON.parse(req.body.data) : {};
 
+        const project = await ProjectService.getProjectById(id);
+
+        if (!project) {
+            return res.status(404).json({
+                success: false,
+                message: "Project not found",
+            });
+        }
+
         if (req.file) {
             newThumbnailUrl = req.file.path;
             updates.thumbnail = newThumbnailUrl;
         }
 
         const result = await ProjectService.updateProject(id, updates);
+
+        if (newThumbnailUrl && result) await deleteImageFromCloudinary(project.thumbnail);
 
         res.status(200).json({
             success: true,
@@ -116,7 +127,18 @@ const updateProject = async (req: Request, res: Response) => {
 const deleteProject = async (req: Request, res: Response) => {
     try {
         const id = parseInt(req.params.id);
+        const project = await ProjectService.getProjectById(id);
+
+        if (!project) {
+            return res.status(404).json({
+                success: false,
+                message: "Project not found",
+            });
+        }
+
         const result = await ProjectService.deleteProject(id);
+
+        if (result) await deleteImageFromCloudinary(project.thumbnail);
 
         res.status(200).json({
             success: true,

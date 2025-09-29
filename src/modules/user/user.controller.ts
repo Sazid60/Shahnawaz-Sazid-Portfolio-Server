@@ -41,7 +41,7 @@ const createUser = async (req: Request, res: Response) => {
 
 const getMe = async (req: Request, res: Response) => {
     try {
-        const result = await UserService.getMe(req.params.email);
+        const result = await UserService.getMe(Number(req.params.id));
         if (!result) {
             return res.status(404).json({
                 success: false,
@@ -69,8 +69,17 @@ const updateUser = async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
         const updates = req.body.data ? JSON.parse(req.body.data) : {};
 
+
         if (updates.password) {
             updates.password = await bcrypt.hash(updates.password, 10);
+        }
+
+        const userInfo = await UserService.getMe(Number(req.params.id));
+        if (!userInfo) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            })
         }
 
         if (req.file) {
@@ -79,6 +88,7 @@ const updateUser = async (req: Request, res: Response) => {
         }
 
         const result = await UserService.updateUser(id, updates);
+        if (newImageUrl && result) await deleteImageFromCloudinary(userInfo.image);
 
         res.status(200).json({
             success: true,

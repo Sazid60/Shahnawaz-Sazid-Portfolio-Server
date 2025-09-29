@@ -104,12 +104,24 @@ const updateBlog = async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
         const updates = req.body.data ? JSON.parse(req.body.data) : {};
 
+        const blog = await BlogService.getBlogById(id);
+
+        if (!blog) {
+            return res.status(404).json({
+                success: false,
+                message: "Blog not found",
+            });
+        }
+
+
         if (req.file) {
             newThumbnailUrl = req.file.path;
             updates.thumbnail = newThumbnailUrl;
         }
 
+
         const result = await BlogService.updateBlog(id, updates);
+        if (newThumbnailUrl && result) await deleteImageFromCloudinary(blog.thumbnail);
 
         res.status(200).json({
             success: true,
@@ -130,7 +142,20 @@ const updateBlog = async (req: Request, res: Response) => {
 const deleteBlog = async (req: Request, res: Response) => {
     try {
         const id = parseInt(req.params.id);
+
+
+        const blog = await BlogService.getBlogById(id);
+
+        if (!blog) {
+            return res.status(404).json({
+                success: false,
+                message: "Blog not found",
+            });
+        }
+
         const result = await BlogService.deleteBlog(id);
+
+        if (result) await deleteImageFromCloudinary(blog.thumbnail);
 
         res.status(200).json({
             success: true,

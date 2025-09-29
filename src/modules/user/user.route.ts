@@ -6,7 +6,7 @@ const router = express.Router();
 
 
 router.post("/register", multerUpload.single("file"), UserController.createUser);
-router.get("/:email", UserController.getMe);
+router.get("/:id", UserController.getMe);
 router.patch("/:id", multerUpload.single("file"), UserController.updateUser);
 
 export const UserRouter = router;
