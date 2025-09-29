@@ -40,10 +40,27 @@ const getResume = async (_req: Request, res: Response) => {
         if (!resume) {
             return res.status(404).json({ success: false, message: "No resume found" });
         }
-
         res.status(200).json({ success: true, message: "Resume fetched successfully", data: resume });
     } catch (error: any) {
         res.status(500).json({ success: false, message: "Failed to fetch resume", error: String(error) });
+    }
+};
+
+const downloadResume = async (_req: Request, res: Response) => {
+    try {
+        const resume = await ResumeService.getFirstResume();
+        if (!resume) {
+            return res.status(404).json({ success: false, message: "No resume found" });
+        }
+
+        const fileStream = await ResumeService.getResumeFileStream(resume.resumeUrl);
+
+        res.setHeader("Content-Disposition", "attachment; filename=My_Resume.pdf");
+        res.setHeader("Content-Type", "application/pdf");
+
+        fileStream.pipe(res);
+    } catch (error: any) {
+        res.status(500).json({ success: false, message: "Failed to download resume", error: error.message });
     }
 };
 
@@ -53,8 +70,8 @@ const deleteResume = async (_req: Request, res: Response) => {
         if (!existingResume) {
             return res.status(404).json({ success: false, message: "No resume to delete" });
         }
-        await deleteImageFromCloudinary(existingResume.resumeUrl);
 
+        await deleteImageFromCloudinary(existingResume.resumeUrl);
         await ResumeService.deleteResume(existingResume.id);
 
         res.status(200).json({ success: true, message: "Resume deleted successfully" });
@@ -66,5 +83,6 @@ const deleteResume = async (_req: Request, res: Response) => {
 export const ResumeController = {
     uploadResume,
     getResume,
+    downloadResume,
     deleteResume,
 };
