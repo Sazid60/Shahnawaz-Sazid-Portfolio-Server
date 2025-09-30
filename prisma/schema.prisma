@@ -51,6 +51,8 @@ model Project {
   liveUrl       String?
   backendRepo   String?
   frontendRepo  String?
+  ieeeUrl       String?
+  publishedOn   String?
   userId        Int
   user          User     @relation(fields: [userId], references: [id])
   createdAt     DateTime @default(now())

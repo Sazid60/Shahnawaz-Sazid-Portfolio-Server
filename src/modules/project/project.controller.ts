@@ -6,7 +6,7 @@ const createProject = async (req: Request, res: Response) => {
     let thumbnailUrl = "";
 
     try {
-        const { title, description, features, category, frontendTechs, backendTechs, liveUrl, backendRepo, frontendRepo, userId } = JSON.parse(req.body.data);
+        const { title, description, features, category, frontendTechs, backendTechs, liveUrl, backendRepo, frontendRepo, userId, ieeeUrl, publishedOn } = JSON.parse(req.body.data);
 
         thumbnailUrl = req.file?.path || "";
 
@@ -20,6 +20,8 @@ const createProject = async (req: Request, res: Response) => {
             liveUrl,
             backendRepo,
             frontendRepo,
+            ieeeUrl,
+            publishedOn,
             thumbnail: thumbnailUrl,
             user: { connect: { id: userId } },
         });

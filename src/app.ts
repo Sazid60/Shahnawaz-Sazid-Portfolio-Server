@@ -10,6 +10,7 @@ import { ResumeRouter } from "./modules/resume/resume.route";
 import { AcademicRouter } from "./modules/academics/academics.route";
 import { SkillRouter } from "./modules/skills/skill.route";
 import { ExperienceRouter } from "./modules/experience/experience.route";
+import { ContactRouter } from "./modules/contact/contact.route";
 
 
 
@@ -35,6 +36,7 @@ app.use("/api/v1/resume", ResumeRouter)
 app.use("/api/v1/academic", AcademicRouter)
 app.use("/api/v1/skill", SkillRouter)
 app.use("/api/v1/experience", ExperienceRouter)
+app.use("/api/v1/contact", ContactRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.status(200).json({

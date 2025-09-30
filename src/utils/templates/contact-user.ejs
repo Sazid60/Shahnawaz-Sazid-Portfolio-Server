@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Thank You for Contacting</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background: linear-gradient(120deg, #a1c4fd, #c2e9fb);
+      padding: 30px;
+    }
+    .container {
+      max-width: 650px;
+      margin: auto;
+      background: #ffffff;
+      border-radius: 25px;
+      padding: 35px;
+      box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+      text-align: center;
+      border-top: 6px solid #4caf50;
+    }
+    h1 {
+      color: #4caf50;
+      font-size: 30px;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 16px;
+      margin: 12px 0;
+      line-height: 1.6;
+    }
+    .highlight {
+      font-weight: bold;
+      color: #ff6f61;
+    }
+    .message-box {
+      background: #f0f9f0;
+      padding: 15px;
+      border-radius: 12px;
+      margin: 10px 0;
+      border-left: 4px solid #4caf50;
+    }
+    .footer {
+      margin-top: 25px;
+      font-size: 0.85rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1> Thank You for Reaching Out!</h1>
+    <p>Hi <span class="highlight"><%= name %></span>,</p>
+    <p>Sazid received your message:</p>
+    <div class="message-box">
+      "<%= message %>"
+    </div>
+    <p>Sazid will contact you soon at <span class="highlight"><%= email %></span>.</p>
+    <div class="footer">This is an automated confirmation email. Please do not reply.</div>
+  </div>
+</body>
+</html>
