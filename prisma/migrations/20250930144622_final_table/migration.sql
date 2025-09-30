@@ -45,6 +45,8 @@ CREATE TABLE "public"."Project" (
     "liveUrl" TEXT,
     "backendRepo" TEXT,
     "frontendRepo" TEXT,
+    "ieeeUrl" TEXT,
+    "publishedOn" TEXT,
     "userId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
