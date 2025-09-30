@@ -8,6 +8,7 @@ import { BlogRouter } from "./modules/blog/blog.route";
 import { ProjectRouter } from "./modules/project/project.route";
 import { ResumeRouter } from "./modules/resume/resume.route";
 import { AcademicRouter } from "./modules/academics/academics.route";
+import { SkillRouter } from "./modules/skills/skill.route";
 
 
 
@@ -31,6 +32,7 @@ app.use("/api/v1/blog", BlogRouter)
 app.use("/api/v1/project", ProjectRouter)
 app.use("/api/v1/resume", ResumeRouter)
 app.use("/api/v1/academic", AcademicRouter)
+app.use("/api/v1/skill", SkillRouter)
 
 app.get("/", (req: Request, res: Response) => {
   res.status(200).json({
