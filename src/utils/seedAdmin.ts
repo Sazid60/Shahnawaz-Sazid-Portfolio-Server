@@ -23,7 +23,7 @@ export const seedAdmin = async () => {
 
         await prisma.user.create({
             data: {
-                name: "Admin",
+                name: "Shahnawaz Sazid",
                 email: adminEmail,
                 password: hashedPassword,
                 phone: "+8801639768727",

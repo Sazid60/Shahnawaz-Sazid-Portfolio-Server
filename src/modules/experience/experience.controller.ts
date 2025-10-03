@@ -90,6 +90,9 @@ const updateExperience = async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
     const updates = req.body.data ? JSON.parse(req.body.data) : {};
 
+    console.log(updates)
+    if (updates.companyLogo === null) delete updates.companyLogo;
+
     const experience = await ExperienceService.getExperienceById(id);
 
     if (!experience) {

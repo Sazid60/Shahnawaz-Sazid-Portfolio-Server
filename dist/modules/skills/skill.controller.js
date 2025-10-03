@@ -16,13 +16,13 @@ const createSkill = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     var _a;
     let imageUrl = "";
     try {
-        const { skill, expertise, userId } = JSON.parse(req.body.data);
+        const { skill, expertise, userId } = req.body;
         imageUrl = ((_a = req.file) === null || _a === void 0 ? void 0 : _a.path) || "";
         const payload = {
             skill,
             expertise,
             image: imageUrl,
-            user: { connect: { id: userId } },
+            user: { connect: { id: Number(userId) } },
         };
         const result = yield skill_service_1.SkillService.createSkill(payload);
         res.status(201).json({
@@ -88,6 +88,9 @@ const updateSkill = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     try {
         const id = parseInt(req.params.id);
         const updates = req.body.data ? JSON.parse(req.body.data) : {};
+        console.log(updates);
+        if (updates.image === null)
+            delete updates.image;
         const skill = yield skill_service_1.SkillService.getSkillById(id);
         if (!skill) {
             return res.status(404).json({

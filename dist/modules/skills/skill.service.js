@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SkillService = void 0;
 const db_1 = require("../../config/db");
 const createSkill = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(payload);
     return db_1.prisma.skill.create({ data: payload });
 });
 const getAllSkills = (userId) => __awaiter(void 0, void 0, void 0, function* () {

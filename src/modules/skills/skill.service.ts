@@ -2,7 +2,8 @@ import { Skill, Prisma } from "@prisma/client";
 import { prisma } from "../../config/db";
 
 const createSkill = async (payload: Prisma.SkillCreateInput): Promise<Skill> => {
-  return prisma.skill.create({data: payload});
+  console.log(payload)
+  return prisma.skill.create({ data: payload });
 };
 
 const getAllSkills = async (userId?: number): Promise<Skill[]> => {
@@ -19,6 +20,7 @@ const getSkillById = async (id: number): Promise<Skill | null> => {
 };
 
 const updateSkill = async (id: number, updates: Prisma.SkillUpdateInput): Promise<Skill> => {
+  
   return prisma.skill.update({
     where: { id },
     data: updates

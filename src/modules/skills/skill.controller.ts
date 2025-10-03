@@ -6,7 +6,7 @@ const createSkill = async (req: Request, res: Response) => {
   let imageUrl = "";
 
   try {
-    const { skill, expertise, userId } = JSON.parse(req.body.data);
+    const { skill, expertise, userId } = req.body;
 
     imageUrl = req.file?.path || "";
 
@@ -14,8 +14,9 @@ const createSkill = async (req: Request, res: Response) => {
       skill,
       expertise,
       image: imageUrl,
-      user: { connect: { id: userId } },
+      user: { connect: { id: Number(userId) } }, 
     };
+
 
     const result = await SkillService.createSkill(payload);
 
@@ -86,6 +87,9 @@ const updateSkill = async (req: Request, res: Response) => {
   try {
     const id = parseInt(req.params.id);
     const updates = req.body.data ? JSON.parse(req.body.data) : {};
+    console.log(updates)
+    
+    if (updates.image === null) delete updates.image;
 
     const skill = await SkillService.getSkillById(id);
     if (!skill) {

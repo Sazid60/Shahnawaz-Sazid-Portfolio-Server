@@ -91,6 +91,9 @@ const updateExperience = (req, res) => __awaiter(void 0, void 0, void 0, functio
     try {
         const id = parseInt(req.params.id);
         const updates = req.body.data ? JSON.parse(req.body.data) : {};
+        console.log(updates);
+        if (updates.companyLogo === null)
+            delete updates.companyLogo;
         const experience = yield experience_service_1.ExperienceService.getExperienceById(id);
         if (!experience) {
             return res.status(404).json({

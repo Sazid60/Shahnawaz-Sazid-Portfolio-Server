@@ -19,10 +19,7 @@ const getExperienceById = async (id: number): Promise<Experience | null> => {
   });
 };
 
-const updateExperience = async (
-  id: number,
-  updates: Prisma.ExperienceUpdateInput
-): Promise<Experience> => {
+const updateExperience = async (id: number,updates: Prisma.ExperienceUpdateInput): Promise<Experience> => {
   return prisma.experience.update({
     where: { id },
     data: updates

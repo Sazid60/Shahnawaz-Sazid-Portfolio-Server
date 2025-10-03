@@ -16,6 +16,7 @@ const http_1 = __importDefault(require("http"));
 const app_1 = __importDefault(require("./app"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const db_1 = require("./config/db");
+const seedAdmin_1 = require("./utils/seedAdmin");
 dotenv_1.default.config();
 let server = null;
 function connectToDB() {
@@ -78,4 +79,7 @@ function handleProcessEvents() {
         gracefulShutdown("unhandledRejection");
     });
 }
-startServer();
+(() => __awaiter(void 0, void 0, void 0, function* () {
+    yield startServer();
+    yield (0, seedAdmin_1.seedAdmin)();
+}))();
