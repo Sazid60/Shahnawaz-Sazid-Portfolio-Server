@@ -16,16 +16,17 @@ const createBlog = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     var _a;
     let thumbnailUrl = "";
     try {
-        const { title, content, tags, authorId, featured } = JSON.parse(req.body.data);
         thumbnailUrl = ((_a = req.file) === null || _a === void 0 ? void 0 : _a.path) || "";
+        const { title, content, tags, authorId, featured } = JSON.parse(req.body.data);
         const payload = {
             title,
             content,
-            tags,
+            tags: Array.isArray(tags) ? tags : (tags ? tags.split(",").map((t) => t.trim()) : []),
             featured: featured !== null && featured !== void 0 ? featured : false,
-            thumbnail: thumbnailUrl,
             author: { connect: { id: authorId } },
+            thumbnail: thumbnailUrl,
         };
+        console.log(payload);
         const result = yield blog_service_1.BlogService.createBlog(payload);
         res.status(201).json({
             success: true,
@@ -36,6 +37,7 @@ const createBlog = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     catch (error) {
         if (thumbnailUrl)
             yield (0, cloudinary_config_1.deleteImageFromCloudinary)(thumbnailUrl);
+        console.log(error);
         res.status(500).json({
             success: false,
             message: "Failed to create blog",
@@ -105,6 +107,8 @@ const updateBlog = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     try {
         const id = parseInt(req.params.id);
         const updates = req.body.data ? JSON.parse(req.body.data) : {};
+        if (updates.thumbnail === null)
+            delete updates.thumbnail;
         const blog = yield blog_service_1.BlogService.getBlogById(id);
         if (!blog) {
             return res.status(404).json({
@@ -128,6 +132,7 @@ const updateBlog = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     catch (error) {
         if (newThumbnailUrl)
             yield (0, cloudinary_config_1.deleteImageFromCloudinary)(newThumbnailUrl);
+        console.log(error);
         res.status(500).json({
             success: false,
             message: "Failed to update blog",

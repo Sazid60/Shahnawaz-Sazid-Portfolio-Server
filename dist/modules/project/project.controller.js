@@ -16,12 +16,11 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     var _a;
     let thumbnailUrl = "";
     try {
-        const { title, description, features, category, frontendTechs, backendTechs, liveUrl, backendRepo, frontendRepo, userId, ieeeUrl, publishedOn } = JSON.parse(req.body.data);
+        const { title, description, category, frontendTechs, backendTechs, liveUrl, backendRepo, frontendRepo, userId, ieeeUrl, publishedOn } = JSON.parse(req.body.data);
         thumbnailUrl = ((_a = req.file) === null || _a === void 0 ? void 0 : _a.path) || "";
         const result = yield project_service_1.ProjectService.createProject({
             title,
             description,
-            features,
             category,
             frontendTechs,
             backendTechs,
@@ -42,6 +41,7 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     catch (error) {
         if (thumbnailUrl)
             yield (0, cloudinary_config_1.deleteImageFromCloudinary)(thumbnailUrl);
+        console.log(error);
         res.status(500).json({
             success: false,
             message: "Failed to create project",
@@ -95,6 +95,9 @@ const updateProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const id = parseInt(req.params.id);
         const updates = req.body.data ? JSON.parse(req.body.data) : {};
+        console.log(updates);
+        if (updates.thumbnail === null)
+            delete updates.thumbnail;
         const project = yield project_service_1.ProjectService.getProjectById(id);
         if (!project) {
             return res.status(404).json({
@@ -118,6 +121,7 @@ const updateProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     catch (error) {
         if (newThumbnailUrl)
             yield (0, cloudinary_config_1.deleteImageFromCloudinary)(newThumbnailUrl);
+        console.log(error);
         res.status(500).json({
             success: false,
             message: "Failed to update project",

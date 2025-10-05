@@ -6,14 +6,13 @@ const createProject = async (req: Request, res: Response) => {
     let thumbnailUrl = "";
 
     try {
-        const { title, description, features, category, frontendTechs, backendTechs, liveUrl, backendRepo, frontendRepo, userId, ieeeUrl, publishedOn } = JSON.parse(req.body.data);
+        const { title, description, category, frontendTechs, backendTechs, liveUrl, backendRepo, frontendRepo, userId, ieeeUrl, publishedOn } = JSON.parse(req.body.data);
 
         thumbnailUrl = req.file?.path || "";
 
         const result = await ProjectService.createProject({
             title,
             description,
-            features,
             category,
             frontendTechs,
             backendTechs,
@@ -33,7 +32,7 @@ const createProject = async (req: Request, res: Response) => {
         });
     } catch (error: any) {
         if (thumbnailUrl) await deleteImageFromCloudinary(thumbnailUrl);
-
+        console.log(error)
         res.status(500).json({
             success: false,
             message: "Failed to create project",
@@ -92,6 +91,10 @@ const updateProject = async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
         const updates = req.body.data ? JSON.parse(req.body.data) : {};
 
+        console.log(updates)
+
+        if (updates.thumbnail === null) delete updates.thumbnail;
+
         const project = await ProjectService.getProjectById(id);
 
         if (!project) {
@@ -117,7 +120,7 @@ const updateProject = async (req: Request, res: Response) => {
         });
     } catch (error: any) {
         if (newThumbnailUrl) await deleteImageFromCloudinary(newThumbnailUrl);
-
+        console.log(error)
         res.status(500).json({
             success: false,
             message: "Failed to update project",

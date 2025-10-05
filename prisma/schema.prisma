@@ -28,7 +28,7 @@ model User {
 model Blog {
   id        Int      @id @default(autoincrement())
   title     String
-  content   Json
+  content   String
   thumbnail String
   views     Int      @default(0)
   tags      String[]
@@ -44,10 +44,9 @@ model Project {
   title         String
   description   String
   thumbnail     String
-  features      String[]
   category      String
-  frontendTechs String[]
-  backendTechs  String[]
+  frontendTechs String
+  backendTechs  String
   liveUrl       String?
   backendRepo   String?
   frontendRepo  String?

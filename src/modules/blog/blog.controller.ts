@@ -6,17 +6,20 @@ const createBlog = async (req: Request, res: Response) => {
     let thumbnailUrl: string = "";
 
     try {
-        const { title, content, tags, authorId, featured } = JSON.parse(req.body.data);
         thumbnailUrl = req.file?.path || "";
+
+        const { title, content, tags, authorId, featured } = JSON.parse(req.body.data);
 
         const payload = {
             title,
             content,
-            tags,
+            tags: Array.isArray(tags) ? tags : (tags ? tags.split(",").map((t: string) => t.trim()) : []),
             featured: featured ?? false,
-            thumbnail: thumbnailUrl,
             author: { connect: { id: authorId } },
+            thumbnail: thumbnailUrl,
         };
+
+        console.log(payload)
 
         const result = await BlogService.createBlog(payload);
 
@@ -27,7 +30,7 @@ const createBlog = async (req: Request, res: Response) => {
         });
     } catch (error: any) {
         if (thumbnailUrl) await deleteImageFromCloudinary(thumbnailUrl);
-
+        console.log(error)
         res.status(500).json({
             success: false,
             message: "Failed to create blog",
@@ -104,6 +107,8 @@ const updateBlog = async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
         const updates = req.body.data ? JSON.parse(req.body.data) : {};
 
+        if (updates.thumbnail === null) delete updates.thumbnail;
+
         const blog = await BlogService.getBlogById(id);
 
         if (!blog) {
@@ -130,7 +135,7 @@ const updateBlog = async (req: Request, res: Response) => {
         });
     } catch (error: any) {
         if (newThumbnailUrl) await deleteImageFromCloudinary(newThumbnailUrl);
-
+        console.log(error)
         res.status(500).json({
             success: false,
             message: "Failed to update blog",
