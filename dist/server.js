@@ -23,27 +23,26 @@ function connectToDB() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             yield db_1.prisma.$connect();
-            console.log("Database Is Connected");
+            console.log(" Database is connected");
         }
         catch (error) {
-            console.log("Database Db Connection Failed");
+            console.error(" Database connection failed", error);
+            if (process.env.VERCEL)
+                return;
             process.exit(1);
         }
     });
 }
 function startServer() {
     return __awaiter(this, void 0, void 0, function* () {
-        try {
-            yield connectToDB();
+        yield connectToDB();
+        if (!process.env.VERCEL) {
+            const PORT = process.env.PORT || 5000;
             server = http_1.default.createServer(app_1.default);
-            server.listen(process.env.PORT, () => {
-                console.log(`Server is running on port ${process.env.PORT}`);
+            server.listen(PORT, () => {
+                console.log(` Server running on port ${PORT}`);
             });
             handleProcessEvents();
-        }
-        catch (error) {
-            console.error("Error during server startup:", error);
-            process.exit(1);
         }
     });
 }
@@ -51,16 +50,10 @@ function gracefulShutdown(signal) {
     return __awaiter(this, void 0, void 0, function* () {
         console.warn(`Received ${signal}, shutting down gracefully...`);
         if (server) {
-            server.close(() => __awaiter(this, void 0, void 0, function* () {
+            server.close(() => {
                 console.log("HTTP server closed.");
-                try {
-                    console.log("Server shutdown complete.");
-                }
-                catch (error) {
-                    console.error("Error during shutdown:", error);
-                }
                 process.exit(0);
-            }));
+            });
         }
         else {
             process.exit(0);
@@ -81,5 +74,9 @@ function handleProcessEvents() {
 }
 (() => __awaiter(void 0, void 0, void 0, function* () {
     yield startServer();
-    yield (0, seedAdmin_1.seedAdmin)();
+    const admin = yield db_1.prisma.user.findFirst({ where: { role: "ADMIN" } });
+    if (!admin) {
+        yield (0, seedAdmin_1.seedAdmin)();
+    }
 }))();
+exports.default = app_1.default;
